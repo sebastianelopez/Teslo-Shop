@@ -11,9 +11,13 @@ import {
 } from "@mui/material";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { useContext } from "react";
+import { UiContext } from "../../context";
 
 export const Navbar = () => {
   const { asPath } = useRouter();
+
+  const {toggleSideMenu} = useContext(UiContext)
 
   return (
     <AppBar>
@@ -47,10 +51,7 @@ export const Navbar = () => {
           </NextLink>
           <NextLink href={"/category/women"} passHref>
             <Link>
-              <Button
-                color={asPath === "/category/women" ? "primary" : "info"}
-                href={"/category/women"}
-              >
+              <Button color={asPath === "/category/women" ? "primary" : "info"}>
                 Mujeres
               </Button>
             </Link>
@@ -78,7 +79,7 @@ export const Navbar = () => {
           </Link>
         </NextLink>
 
-        <Button>Menu</Button>
+        <Button onClick={toggleSideMenu}>Menu</Button>
       </Toolbar>
     </AppBar>
   );
