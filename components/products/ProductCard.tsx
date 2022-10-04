@@ -6,6 +6,7 @@ import {
   Box,
   Typography,
   Link,
+  Chip,
 } from "@mui/material";
 import NextLink from "next/link";
 import { FC, useMemo, useState } from "react";
@@ -34,16 +35,29 @@ export const ProductCard: FC<Props> = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card>
-        <NextLink href={`/product/slug`} passHref prefetch={false}>
+        <NextLink href={`/product/${product.slug}`} passHref prefetch={false}>
           {/** para que no precargue todas las posibles paginas */}
           <Link>
             <CardActionArea>
+              {product.inStock === 0 && (
+                <Chip
+                  color="primary"
+                  label="No hay disponibles"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
+
               <CardMedia
                 component={"img"}
                 image={productImage}
                 alt={product.title}
                 className="fadeIn"
-                onLoad={()=>setIsImageLoaded(true)}
+                onLoad={() => setIsImageLoaded(true)}
               />
             </CardActionArea>
           </Link>
