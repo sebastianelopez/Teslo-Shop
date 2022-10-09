@@ -1,8 +1,20 @@
-import { Box, Button, Grid, TextField, Typography, Link } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Link,
+  Chip,
+} from "@mui/material";
 import { AuthLayout } from "../../components/layouts";
 import NextLink from "next/link";
 import { useForm } from "react-hook-form";
 import { validations } from "../../utils";
+import { ErrorOutline } from "@mui/icons-material";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../context";
+import { useRouter } from "next/router";
 
 type FormData = {
   email: string;
@@ -16,7 +28,27 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onLoginUser = (data: FormData) => {};
+  const router= useRouter();
+
+  const { loginUser } = useContext(AuthContext);
+
+  const [showError, setShowError] = useState(false);
+
+  const onLoginUser = async ({ email, password }: FormData) => {
+    setShowError(false);
+
+    const isValidLogin=loginUser(email, password);
+
+    if(!isValidLogin){
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+
+      return;
+    }
+    
+    router.replace('/'); // replace para que no vuelva a login
+    //TODO: navegar a la pantalla en la que estaba el usuario
+  };
 
   return (
     <AuthLayout title={"Login"}>
@@ -32,6 +64,13 @@ const LoginPage = () => {
               <Typography variant="h1" component={"h1"}>
                 Ingresar
               </Typography>
+              <Chip
+                label="No reconocemos ese usuario / contraseña"
+                color="error"
+                icon={<ErrorOutline />}
+                className="fadeIn"
+                sx={{ display: showError ? "flex" : "none" }}
+              />
             </Grid>
 
             <Grid item xs={12}>
