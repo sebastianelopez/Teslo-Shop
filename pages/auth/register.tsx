@@ -12,7 +12,6 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
-import { tesloApi } from "../../api";
 import { AuthLayout } from "../../components/layouts";
 import { AuthContext } from "../../context";
 import { validations } from "../../utils";
@@ -34,21 +33,22 @@ const RegisterPage = () => {
   const { registerUser } = useContext(AuthContext);
 
   const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');;
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onRegisterUser = async ({ name, email, password }: FormData) => {
     setShowError(false);
 
-    const {hasError,message}= await registerUser(name, email, password);
+    const { hasError, message } = await registerUser(name, email, password);
 
-    if(hasError){
+    if (hasError) {
       setShowError(true);
       setErrorMessage(message!);
       setTimeout(() => setShowError(false), 3000);
       return;
     }
-    
-    router.replace('/')
+
+    const destination = router.query.p?.toString() || "/";
+    router.replace(destination);
   };
 
   return (
@@ -128,7 +128,14 @@ const RegisterPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <NextLink href={"/auth/login"} passHref>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/login?p=${router.query.p}`
+                    : "/auth/login"
+                }
+                passHref
+              >
                 <Link underline="always">¿Ya tienes cuenta?</Link>
               </NextLink>
             </Grid>

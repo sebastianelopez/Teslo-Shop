@@ -28,7 +28,7 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const router= useRouter();
+  const router = useRouter();
 
   const { loginUser } = useContext(AuthContext);
 
@@ -37,17 +37,16 @@ const LoginPage = () => {
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError(false);
 
-    const isValidLogin=loginUser(email, password);
+    const isValidLogin = loginUser(email, password);
 
-    if(!isValidLogin){
+    if (!isValidLogin) {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
 
       return;
     }
-    
-    router.replace('/'); // replace para que no vuelva a login
-    //TODO: navegar a la pantalla en la que estaba el usuario
+    const destination = router.query.p?.toString() || "/";
+    router.replace(destination); // replace para que no vuelva a login
   };
 
   return (
@@ -114,7 +113,14 @@ const LoginPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <NextLink href={"/auth/register"} passHref>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/register?p=${router.query.p}`
+                    : "/auth/register"
+                }
+                passHref
+              >
                 <Link underline="always">Registrarse</Link>
               </NextLink>
             </Grid>
